@@ -7,7 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "ruff",
     "bandit",
-    "safety",
+    "safety >= 2.4",
     "pytest",
     "pytest-cov",
     "requests==2.19.0",
