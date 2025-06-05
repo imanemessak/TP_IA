@@ -91,7 +91,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install .
 
-      - name: 🔒 Run Safety (Dependency vulnerability check)
+      - name: 🛡️ Run Safety (Dependency vulnerability check)
         run: safety check
         continue-on-error: true
 
