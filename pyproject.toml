@@ -10,7 +10,7 @@ dependencies = [
     "safety",
     "pytest",
     "pytest-cov",
-    "pyyaml==3.13"
+    "requests==2.19.0",
 ]
 
 [tool.ruff.lint]
