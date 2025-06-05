@@ -12,8 +12,6 @@ jobs:
   setup:
     name: 🛠️ Setup
     runs-on: ubuntu-latest
-    outputs:
-      python-version: '3.11'
     steps:
       - name: 🛒 Checkout code
         uses: actions/checkout@v3
@@ -27,9 +25,8 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install .
-          echo "Python dependencies installed"
 
-  ruff-lint:
+  ruff:
     name: 🧐 Ruff Lint
     runs-on: ubuntu-latest
     needs: setup
@@ -37,37 +34,9 @@ jobs:
       - name: 🛒 Checkout code
         uses: actions/checkout@v3
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: 📦 Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install .
-
       - name: 🔍 Run Ruff Lint
         run: ruff check .
         continue-on-error: true
-
-  ruff-format:
-    name: 📝 Ruff Format Check
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - name: 🛒 Checkout code
-        uses: actions/checkout@v3
-
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: 📦 Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install .
 
       - name: 📝 Run Ruff Format Check
         run: ruff format --check .
@@ -76,42 +45,22 @@ jobs:
   safety:
     name: 🔒 Safety Check
     runs-on: ubuntu-latest
-    needs: setup
+    needs: ruff
     steps:
       - name: 🛒 Checkout code
         uses: actions/checkout@v3
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: 📦 Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install .
-
-      - name: 🛡️ Run Safety (Dependency vulnerability check)
+      - name: 🔒 Run Safety (Dependency vulnerability check)
         run: safety check
         continue-on-error: true
 
   bandit:
     name: 🕵️ Bandit Security Analysis
     runs-on: ubuntu-latest
-    needs: setup
+    needs: safety
     steps:
       - name: 🛒 Checkout code
         uses: actions/checkout@v3
-
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: 📦 Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install .
 
       - name: 🕵️ Run Bandit
         run: bandit -r . -x tests
@@ -120,20 +69,10 @@ jobs:
   pytest:
     name: 🧪 Pytest with Coverage
     runs-on: ubuntu-latest
-    needs: setup
+    needs: bandit
     steps:
       - name: 🛒 Checkout code
         uses: actions/checkout@v3
-
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: 📦 Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install .
 
       - name: 🧪 Run Pytest with Coverage
         run: pytest --cov=./ --cov-report=term-missing
