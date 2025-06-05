@@ -9,8 +9,8 @@ dependencies = [
     "bandit",
     "safety",
     "pytest",
-    "pytest-cov"
-    "requests==2.19.1" 
+    "pytest-cov",
+    "requests==2.19.1"
 ]
 
 [tool.ruff.lint]
